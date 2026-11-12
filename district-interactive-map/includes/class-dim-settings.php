@@ -138,26 +138,28 @@ class DIM_Settings {
                 'featureType' => 'all',
                 'elementType' => 'geometry',
                 'stylers'     => array(
-                    array( 'color' => '#f5f5f5' ),
+                    array( 'color' => '#eaeaea' ),
                 ),
             ),
             array(
                 'featureType' => 'all',
                 'elementType' => 'labels.text.stroke',
                 'stylers'     => array(
-                    array( 'visibility' => 'off' ),
+                    array( 'visibility' => 'on' ),
+                    array( 'color' => '#ffffff' ),
+                    array( 'weight' => 2 ),
                 ),
             ),
             array(
                 'featureType' => 'all',
                 'elementType' => 'labels.text.fill',
                 'stylers'     => array(
-                    array( 'color' => '#9e9e9e' ),
+                    array( 'color' => '#7a7a7a' ),
                 ),
             ),
             array(
                 'featureType' => 'road',
-                'elementType' => 'geometry',
+                'elementType' => 'geometry.fill',
                 'stylers'     => array(
                     array( 'color' => '#ffffff' ),
                 ),
@@ -166,21 +168,44 @@ class DIM_Settings {
                 'featureType' => 'road',
                 'elementType' => 'geometry.stroke',
                 'stylers'     => array(
-                    array( 'color' => '#ffffff' ),
+                    array( 'color' => '#dcdcdc' ),
+                    array( 'weight' => 0.7 ),
                 ),
             ),
             array(
                 'featureType' => 'road',
                 'elementType' => 'labels.text.fill',
                 'stylers'     => array(
-                    array( 'color' => '#9e9e9e' ),
+                    array( 'color' => '#7a7a7a' ),
+                ),
+            ),
+            array(
+                'featureType' => 'road.arterial',
+                'elementType' => 'geometry.fill',
+                'stylers'     => array(
+                    array( 'color' => '#ffffff' ),
+                ),
+            ),
+            array(
+                'featureType' => 'road.highway',
+                'elementType' => 'geometry.fill',
+                'stylers'     => array(
+                    array( 'color' => '#ffffff' ),
+                ),
+            ),
+            array(
+                'featureType' => 'road.highway',
+                'elementType' => 'geometry.stroke',
+                'stylers'     => array(
+                    array( 'color' => '#cfcfcf' ),
+                    array( 'weight' => 1 ),
                 ),
             ),
             array(
                 'featureType' => 'water',
                 'elementType' => 'geometry',
                 'stylers'     => array(
-                    array( 'color' => '#e9e9e9' ),
+                    array( 'color' => '#dcdcdc' ),
                 ),
             ),
             array(
