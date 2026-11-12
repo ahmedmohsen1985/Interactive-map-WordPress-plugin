@@ -3,7 +3,7 @@
  * Plugin Name: District Interactive Map
  * Plugin URI:  https://example.com/district-interactive-map
  * Description: A standalone interactive split-screen map plugin for WordPress.
- * Version:     1.0.3
+ * Version:     1.0.5
  * Author:      Principal WordPress Plugin Architect
  * License:     GPL-2.0+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('DIM_VERSION', '1.0.0');
+define('DIM_VERSION', '1.0.5');
 define('DIM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('DIM_PLUGIN_URL', plugin_dir_url(__FILE__));
 
