@@ -38,6 +38,7 @@
                 center: { lat: config.center.lat, lng: config.center.lng },
                 zoom: config.zoom,
                 styles: config.styles,
+                disableDefaultUI: false,
                 mapTypeControl: false,
                 streetViewControl: false,
                 fullscreenControl: false,

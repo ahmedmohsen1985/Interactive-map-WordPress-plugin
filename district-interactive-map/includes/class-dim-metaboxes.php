@@ -71,7 +71,7 @@ class DIM_Metaboxes {
     }
 
     public function render_viewport_meta( $post ) {
-        wp_nonce_field( 'dim_save_map_meta', 'dim_map_meta_nonce' );
+        wp_nonce_field( 'dim_save_metabox_data', 'dim_metabox_nonce' );
 
         $center_lat   = get_post_meta( $post->ID, 'dim_center_lat', true );
         $center_lng   = get_post_meta( $post->ID, 'dim_center_lng', true );
@@ -119,26 +119,26 @@ class DIM_Metaboxes {
     }
 
     public function render_gps_meta( $post ) {
-        $items = get_post_meta( $post->ID, 'dim_gps_links', true );
+        $items = get_post_meta( $post->ID, '_dim_gps_links', true );
         if ( ! is_array( $items ) ) {
             $items = array();
         }
-        $this->render_repeater( 'dim_gps_links', __( 'GPS Links', 'district-interactive-map' ), $items );
+        $this->render_repeater( 'gps', __( 'GPS Links', 'district-interactive-map' ), $items );
     }
 
     public function render_perk_meta( $post ) {
-        $items = get_post_meta( $post->ID, 'dim_perk_stops', true );
+        $items = get_post_meta( $post->ID, '_dim_perk_stops', true );
         if ( ! is_array( $items ) ) {
             $items = array();
         }
-        $this->render_repeater( 'dim_perk_stops', __( 'Perk Stops', 'district-interactive-map' ), $items );
+        $this->render_repeater( 'perk', __( 'Perk Stops', 'district-interactive-map' ), $items );
     }
 
-    private function render_repeater( $key, $label, $items ) {
-        $template_id = 'dim-tmpl-' . str_replace( '_', '-', $key );
+    private function render_repeater( $type, $label, $items ) {
+        $template_id = 'dim-tmpl-' . $type;
         ?>
-        <div class="dim-repeater-wrapper" data-key="<?php echo esc_attr( $key ); ?>">
-            <table class="dim-repeater-table" data-key="<?php echo esc_attr( $key ); ?>">
+        <div class="dim-repeater-wrapper" data-type="<?php echo esc_attr( $type ); ?>">
+            <table class="dim-repeater-table" data-type="<?php echo esc_attr( $type ); ?>">
                 <thead>
                     <tr>
                         <th class="dim-col-handle"><?php esc_html_e( '#', 'district-interactive-map' ); ?></th>
@@ -151,42 +151,42 @@ class DIM_Metaboxes {
                 </thead>
                 <tbody class="dim-repeater-body">
                     <?php foreach ( $items as $index => $item ) : ?>
-                        <?php $this->render_repeater_row( $key, $index, $item ); ?>
+                        <?php $this->render_repeater_row( $type, $index, $item ); ?>
                     <?php endforeach; ?>
                 </tbody>
             </table>
             <p>
-                <button type="button" class="button dim-add-row" data-key="<?php echo esc_attr( $key ); ?>" data-template="<?php echo esc_attr( $template_id ); ?>">
+                <button type="button" class="button dim-add-row" data-type="<?php echo esc_attr( $type ); ?>" data-template="<?php echo esc_attr( $template_id ); ?>">
                     <?php esc_html_e( 'Add Row', 'district-interactive-map' ); ?>
                 </button>
             </p>
             <template id="<?php echo esc_attr( $template_id ); ?>">
-                <?php $this->render_repeater_row( $key, '__INDEX__', array( 'title' => '', 'lat' => '', 'lng' => '', 'url' => '' ) ); ?>
+                <?php $this->render_repeater_row( $type, 0, array( 'title' => '', 'lat' => '', 'lng' => '', 'url' => '' ) ); ?>
             </template>
         </div>
         <?php
     }
 
-    private function render_repeater_row( $key, $index, $item ) {
-        $name_base = $key . '[' . esc_attr( $index ) . ']';
-        $number    = is_numeric( $index ) ? absint( $index ) + 1 : 1;
+    private function render_repeater_row( $type, $index, $item ) {
+        $prefix = 'dim_' . $type;
+        $number = sprintf( '%02d', absint( $index ) + 1 );
         ?>
-        <tr class="dim-repeater-row" draggable="true" data-key="<?php echo esc_attr( $key ); ?>">
+        <tr class="dim-repeater-row" draggable="true" data-type="<?php echo esc_attr( $type ); ?>">
             <td class="dim-col-handle">
-                <span class="dim-row-number"><?php echo esc_html( sprintf( '%02d', $number ) ); ?></span>
+                <span class="dim-row-number"><?php echo esc_html( $number ); ?></span>
                 <span class="dim-drag-handle" title="<?php esc_attr_e( 'Drag to reorder', 'district-interactive-map' ); ?>">⋮⋮</span>
             </td>
             <td>
-                <input type="text" name="<?php echo esc_attr( $name_base ); ?>[title]" value="<?php echo esc_attr( isset( $item['title'] ) ? $item['title'] : '' ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Title', 'district-interactive-map' ); ?>" required>
+                <input type="text" name="<?php echo esc_attr( $prefix ); ?>_title[]" value="<?php echo esc_attr( isset( $item['title'] ) ? $item['title'] : '' ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Title', 'district-interactive-map' ); ?>">
             </td>
             <td>
-                <input type="text" name="<?php echo esc_attr( $name_base ); ?>[lat]" value="<?php echo esc_attr( isset( $item['lat'] ) ? $item['lat'] : '' ); ?>" class="dim-coord" placeholder="<?php esc_attr_e( 'Latitude', 'district-interactive-map' ); ?>" required>
+                <input type="text" name="<?php echo esc_attr( $prefix ); ?>_lat[]" value="<?php echo esc_attr( isset( $item['lat'] ) ? $item['lat'] : '' ); ?>" class="dim-coord" placeholder="<?php esc_attr_e( 'Latitude', 'district-interactive-map' ); ?>">
             </td>
             <td>
-                <input type="text" name="<?php echo esc_attr( $name_base ); ?>[lng]" value="<?php echo esc_attr( isset( $item['lng'] ) ? $item['lng'] : '' ); ?>" class="dim-coord" placeholder="<?php esc_attr_e( 'Longitude', 'district-interactive-map' ); ?>" required>
+                <input type="text" name="<?php echo esc_attr( $prefix ); ?>_lng[]" value="<?php echo esc_attr( isset( $item['lng'] ) ? $item['lng'] : '' ); ?>" class="dim-coord" placeholder="<?php esc_attr_e( 'Longitude', 'district-interactive-map' ); ?>">
             </td>
             <td>
-                <input type="url" name="<?php echo esc_attr( $name_base ); ?>[url]" value="<?php echo esc_attr( isset( $item['url'] ) ? $item['url'] : '' ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'https://...', 'district-interactive-map' ); ?>">
+                <input type="url" name="<?php echo esc_attr( $prefix ); ?>_url[]" value="<?php echo esc_attr( isset( $item['url'] ) ? $item['url'] : '' ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'https://...', 'district-interactive-map' ); ?>">
             </td>
             <td class="dim-col-actions">
                 <button type="button" class="button dim-move-up"><?php esc_html_e( '↑', 'district-interactive-map' ); ?></button>
@@ -202,11 +202,11 @@ class DIM_Metaboxes {
             return;
         }
 
-        if ( ! isset( $_POST['dim_map_meta_nonce'] ) ) {
+        if ( ! isset( $_POST['dim_metabox_nonce'] ) ) {
             return;
         }
 
-        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['dim_map_meta_nonce'] ) ), 'dim_save_map_meta' ) ) {
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['dim_metabox_nonce'] ) ), 'dim_save_metabox_data' ) ) {
             return;
         }
 
@@ -226,49 +226,90 @@ class DIM_Metaboxes {
         update_post_meta( $post_id, 'dim_center_lng', ( '' !== $center_lng ? floatval( $center_lng ) : 31.3283 ) );
         update_post_meta( $post_id, 'dim_default_zoom', ( '' !== $zoom ? absint( $zoom ) : 14 ) );
 
-        $gps   = isset( $_POST['dim_gps_links'] ) ? $this->sanitize_repeater( $_POST['dim_gps_links'] ) : array();
-        $perks = isset( $_POST['dim_perk_stops'] ) ? $this->sanitize_repeater( $_POST['dim_perk_stops'] ) : array();
+        $gps = array();
+        if ( isset( $_POST['dim_gps_title'] ) && is_array( $_POST['dim_gps_title'] ) ) {
+            $titles = wp_unslash( $_POST['dim_gps_title'] );
+            $lats   = isset( $_POST['dim_gps_lat'] ) ? wp_unslash( $_POST['dim_gps_lat'] ) : array();
+            $lngs   = isset( $_POST['dim_gps_lng'] ) ? wp_unslash( $_POST['dim_gps_lng'] ) : array();
+            $urls   = isset( $_POST['dim_gps_url'] ) ? wp_unslash( $_POST['dim_gps_url'] ) : array();
 
-        update_post_meta( $post_id, 'dim_gps_links', $gps );
-        update_post_meta( $post_id, 'dim_perk_stops', $perks );
-    }
+            foreach ( array_keys( $titles ) as $i ) {
+                $title = isset( $titles[ $i ] ) ? sanitize_text_field( $titles[ $i ] ) : '';
+                $lat   = isset( $lats[ $i ] ) ? sanitize_text_field( $lats[ $i ] ) : '';
+                $lng   = isset( $lngs[ $i ] ) ? sanitize_text_field( $lngs[ $i ] ) : '';
+                $url   = isset( $urls[ $i ] ) ? esc_url_raw( $urls[ $i ] ) : '';
 
-    private function sanitize_repeater( $input ) {
-        $clean = array();
+                if ( '' === $title || '' === $lat || '' === $lng ) {
+                    continue;
+                }
 
-        if ( ! is_array( $input ) ) {
-            return $clean;
+                if ( ! is_numeric( $lat ) || ! is_numeric( $lng ) ) {
+                    continue;
+                }
+
+                $lat_f = floatval( $lat );
+                $lng_f = floatval( $lng );
+
+                if ( ! is_finite( $lat_f ) || ! is_finite( $lng_f ) ) {
+                    continue;
+                }
+
+                $gps[] = array(
+                    'title' => $title,
+                    'lat'   => $lat_f,
+                    'lng'   => $lng_f,
+                    'url'   => $url,
+                );
+            }
         }
 
-        foreach ( $input as $row ) {
-            if ( ! is_array( $row ) ) {
-                continue;
-            }
-
-            $title = isset( $row['title'] ) ? sanitize_text_field( wp_unslash( $row['title'] ) ) : '';
-            $lat   = isset( $row['lat'] ) ? sanitize_text_field( wp_unslash( $row['lat'] ) ) : '';
-            $lng   = isset( $row['lng'] ) ? sanitize_text_field( wp_unslash( $row['lng'] ) ) : '';
-            $url   = isset( $row['url'] ) ? esc_url_raw( wp_unslash( $row['url'] ) ) : '';
-
-            if ( '' === $title || '' === $lat || '' === $lng ) {
-                continue;
-            }
-
-            $lat_f = floatval( $lat );
-            $lng_f = floatval( $lng );
-
-            if ( ! is_finite( $lat_f ) || ! is_finite( $lng_f ) ) {
-                continue;
-            }
-
-            $clean[] = array(
-                'title' => $title,
-                'lat'   => $lat_f,
-                'lng'   => $lng_f,
-                'url'   => $url,
-            );
+        if ( ! empty( $gps ) ) {
+            update_post_meta( $post_id, '_dim_gps_links', $gps );
+        } else {
+            delete_post_meta( $post_id, '_dim_gps_links' );
         }
 
-        return $clean;
+        $perks = array();
+        if ( isset( $_POST['dim_perk_title'] ) && is_array( $_POST['dim_perk_title'] ) ) {
+            $titles = wp_unslash( $_POST['dim_perk_title'] );
+            $lats   = isset( $_POST['dim_perk_lat'] ) ? wp_unslash( $_POST['dim_perk_lat'] ) : array();
+            $lngs   = isset( $_POST['dim_perk_lng'] ) ? wp_unslash( $_POST['dim_perk_lng'] ) : array();
+            $urls   = isset( $_POST['dim_perk_url'] ) ? wp_unslash( $_POST['dim_perk_url'] ) : array();
+
+            foreach ( array_keys( $titles ) as $i ) {
+                $title = isset( $titles[ $i ] ) ? sanitize_text_field( $titles[ $i ] ) : '';
+                $lat   = isset( $lats[ $i ] ) ? sanitize_text_field( $lats[ $i ] ) : '';
+                $lng   = isset( $lngs[ $i ] ) ? sanitize_text_field( $lngs[ $i ] ) : '';
+                $url   = isset( $urls[ $i ] ) ? esc_url_raw( $urls[ $i ] ) : '';
+
+                if ( '' === $title || '' === $lat || '' === $lng ) {
+                    continue;
+                }
+
+                if ( ! is_numeric( $lat ) || ! is_numeric( $lng ) ) {
+                    continue;
+                }
+
+                $lat_f = floatval( $lat );
+                $lng_f = floatval( $lng );
+
+                if ( ! is_finite( $lat_f ) || ! is_finite( $lng_f ) ) {
+                    continue;
+                }
+
+                $perks[] = array(
+                    'title' => $title,
+                    'lat'   => $lat_f,
+                    'lng'   => $lng_f,
+                    'url'   => $url,
+                );
+            }
+        }
+
+        if ( ! empty( $perks ) ) {
+            update_post_meta( $post_id, '_dim_perk_stops', $perks );
+        } else {
+            delete_post_meta( $post_id, '_dim_perk_stops' );
+        }
     }
 }

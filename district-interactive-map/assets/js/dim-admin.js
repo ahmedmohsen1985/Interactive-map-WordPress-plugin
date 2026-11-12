@@ -9,11 +9,12 @@
 
     function setupTable(table) {
         const body = table.querySelector('tbody');
-        const key = table.getAttribute('data-key');
-        const addBtn = document.querySelector('.dim-add-row[data-key="' + key + '"]');
+        const type = table.getAttribute('data-type');
+        const addBtn = document.querySelector('.dim-add-row[data-type="' + type + '"]');
 
         if (addBtn) {
-            addBtn.addEventListener('click', function() {
+            addBtn.addEventListener('click', function(e) {
+                e.preventDefault();
                 addRow(table);
             });
         }
@@ -22,7 +23,7 @@
             setupRow(row, table);
         });
 
-        reindex(table);
+        updateNumbers(table);
     }
 
     function setupRow(row, table) {
@@ -38,7 +39,7 @@
         row.addEventListener('dragend', function() {
             row.classList.remove('dim-dragging');
             window.__dimDraggedRow = null;
-            reindex(table);
+            updateNumbers(table);
         });
 
         row.addEventListener('dragover', function(e) {
@@ -68,7 +69,7 @@
         if (removeBtn) {
             removeBtn.addEventListener('click', function() {
                 row.parentNode.removeChild(row);
-                reindex(table);
+                updateNumbers(table);
             });
         }
 
@@ -78,7 +79,7 @@
                 const prev = row.previousElementSibling;
                 if (prev) {
                     row.parentNode.insertBefore(row, prev);
-                    reindex(table);
+                    updateNumbers(table);
                 }
             });
         }
@@ -89,26 +90,30 @@
                 const next = row.nextElementSibling;
                 if (next) {
                     row.parentNode.insertBefore(next, row);
-                    reindex(table);
+                    updateNumbers(table);
                 }
             });
         }
     }
 
     function addRow(table) {
-        const key = table.getAttribute('data-key');
-        const tmpl = document.getElementById('dim-tmpl-' + key.replace(/_/g, '-'));
+        const type = table.getAttribute('data-type');
+        const tmpl = document.getElementById('dim-tmpl-' + type);
         if (!tmpl) {
             return;
         }
 
-        const uid = Date.now();
-        let html = tmpl.innerHTML;
-        html = html.replace(/__INDEX__/g, uid);
+        const content = tmpl.content ? tmpl.content.cloneNode(true) : tmpl.innerHTML;
 
-        const wrapper = document.createElement('tbody');
-        wrapper.innerHTML = html;
-        const newRow = wrapper.firstElementChild;
+        let newRow;
+        if (typeof content === 'string') {
+            const wrapper = document.createElement('tbody');
+            wrapper.innerHTML = content;
+            newRow = wrapper.firstElementChild;
+        } else {
+            newRow = content.querySelector('.dim-repeater-row');
+        }
+
         if (!newRow) {
             return;
         }
@@ -116,10 +121,10 @@
         const body = table.querySelector('tbody');
         body.appendChild(newRow);
         setupRow(newRow, table);
-        reindex(table);
+        updateNumbers(table);
     }
 
-    function reindex(table) {
+    function updateNumbers(table) {
         const rows = table.querySelectorAll('tbody .dim-repeater-row');
 
         rows.forEach(function(row, index) {
@@ -128,14 +133,6 @@
             if (numEl) {
                 numEl.textContent = number;
             }
-
-            const inputs = row.querySelectorAll('input');
-            inputs.forEach(function(input) {
-                const match = input.name.match(/^dim_(gps_links|perk_stops)\[[^\]]+\]\[[^\]]+\]$/);
-                if (match) {
-                    input.name = 'dim_' + match[1] + '[' + index + '][' + match[2] + ']';
-                }
-            });
         });
     }
 

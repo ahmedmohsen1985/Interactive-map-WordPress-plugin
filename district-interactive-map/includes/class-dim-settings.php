@@ -185,9 +185,37 @@ class DIM_Settings {
             ),
             array(
                 'featureType' => 'poi',
-                'elementType' => 'geometry',
+                'elementType' => 'all',
                 'stylers'     => array(
-                    array( 'color' => '#f5f5f5' ),
+                    array( 'visibility' => 'off' ),
+                ),
+            ),
+            array(
+                'featureType' => 'poi.business',
+                'elementType' => 'all',
+                'stylers'     => array(
+                    array( 'visibility' => 'off' ),
+                ),
+            ),
+            array(
+                'featureType' => 'poi.medical',
+                'elementType' => 'all',
+                'stylers'     => array(
+                    array( 'visibility' => 'off' ),
+                ),
+            ),
+            array(
+                'featureType' => 'poi.attraction',
+                'elementType' => 'all',
+                'stylers'     => array(
+                    array( 'visibility' => 'off' ),
+                ),
+            ),
+            array(
+                'featureType' => 'transit.station',
+                'elementType' => 'all',
+                'stylers'     => array(
+                    array( 'visibility' => 'off' ),
                 ),
             ),
             array(

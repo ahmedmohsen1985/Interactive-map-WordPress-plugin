@@ -42,7 +42,18 @@ class DIM_Shortcode {
 
     public function render( $atts ) {
         self::$instance_count++;
-        $atts = shortcode_atts( array( 'id' => '', 'slug' => '' ), $atts, 'district_map' );
+        $atts = shortcode_atts(
+            array( 'id' => '', 'slug' => '', 'show_empty' => 'false' ),
+            $atts,
+            'district_map'
+        );
+
+        $show_empty = isset( $atts['show_empty'] ) && in_array(
+            strtolower( $atts['show_empty'] ),
+            array( 'true', '1', 'yes' ),
+            true
+        );
+
         $map_id = 0;
 
         if ( ! empty( $atts['id'] ) ) {
@@ -105,8 +116,8 @@ class DIM_Shortcode {
         $raw_zoom = get_post_meta( $map_id, 'dim_default_zoom', true );
         $zoom     = is_numeric( $raw_zoom ) ? absint( $raw_zoom ) : 14;
 
-        $gps_raw  = get_post_meta( $map_id, 'dim_gps_links', true );
-        $perk_raw = get_post_meta( $map_id, 'dim_perk_stops', true );
+        $gps_raw  = get_post_meta( $map_id, '_dim_gps_links', true );
+        $perk_raw = get_post_meta( $map_id, '_dim_perk_stops', true );
 
         if ( ! is_array( $gps_raw ) ) {
             $gps_raw = array();
@@ -117,6 +128,9 @@ class DIM_Shortcode {
 
         $gps   = $this->prepare_items( $gps_raw, 'gps' );
         $perks = $this->prepare_items( $perk_raw, 'perk' );
+
+        $has_gps   = ! empty( $gps );
+        $has_perks = ! empty( $perks );
 
         $config = array(
             'uid'       => $uid,
@@ -139,38 +153,62 @@ class DIM_Shortcode {
         ?>
         <div class="dim-container" id="<?php echo esc_attr( $uid ); ?>">
             <div class="dim-lists-col">
-                <h2 class="dim-section-heading"><?php esc_html_e( 'GPS Links', 'district-interactive-map' ); ?></h2>
-                <div class="dim-items-grid">
-                    <?php foreach ( $gps as $item ) : ?>
-                        <a class="dim-list-item dim-list-item-gps" href="<?php echo esc_url( $item['url'] ); ?>" target="_blank" rel="noopener noreferrer" data-type="gps" data-index="<?php echo esc_attr( $item['num'] ); ?>" data-map-uid="<?php echo esc_attr( $uid ); ?>">
-                            <span class="dim-item-num"><?php echo esc_html( $item['num'] ); ?>.</span>
-                            <span class="dim-item-title"><?php echo esc_html( $item['title'] ); ?></span>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
+                <?php if ( ! $has_gps && ! $has_perks ) : ?>
+                    <div class="dim-empty-state">
+                        <?php esc_html_e( 'No locations added yet.', 'district-interactive-map' ); ?>
+                    </div>
+                <?php else : ?>
 
-                <h2 class="dim-section-heading dim-perks-heading"><?php esc_html_e( 'Perk Stops', 'district-interactive-map' ); ?></h2>
-                <div class="dim-items-grid">
-                    <?php foreach ( $perks as $item ) : ?>
-                        <a class="dim-list-item dim-list-item-perk" href="<?php echo esc_url( $item['url'] ); ?>" target="_blank" rel="noopener noreferrer" data-type="perk" data-index="<?php echo esc_attr( $item['num'] ); ?>" data-map-uid="<?php echo esc_attr( $uid ); ?>">
-                            <span class="dim-item-num"><?php echo esc_html( $item['num'] ); ?>.</span>
-                            <span class="dim-item-title"><?php echo esc_html( $item['title'] ); ?></span>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
+                    <?php if ( $has_gps ) : ?>
+                        <h2 class="dim-section-heading"><?php esc_html_e( 'GPS Links', 'district-interactive-map' ); ?></h2>
+                        <div class="dim-items-grid">
+                            <?php foreach ( $gps as $item ) : ?>
+                                <a class="dim-list-item dim-list-item-gps" href="<?php echo esc_url( $item['url'] ); ?>" target="_blank" rel="noopener noreferrer" data-type="gps" data-index="<?php echo esc_attr( $item['num'] ); ?>" data-map-uid="<?php echo esc_attr( $uid ); ?>">
+                                    <span class="dim-item-num"><?php echo esc_html( $item['num'] ); ?>.</span>
+                                    <span class="dim-item-title"><?php echo esc_html( $item['title'] ); ?></span>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php elseif ( $show_empty ) : ?>
+                        <h2 class="dim-section-heading"><?php esc_html_e( 'GPS Links', 'district-interactive-map' ); ?></h2>
+                        <p class="dim-empty-section"><?php esc_html_e( 'No locations added yet.', 'district-interactive-map' ); ?></p>
+                    <?php endif; ?>
+
+                    <?php if ( $has_perks ) : ?>
+                        <h2 class="dim-section-heading <?php echo $has_gps ? 'dim-perks-heading' : ''; ?>"><?php esc_html_e( 'Perk Stops', 'district-interactive-map' ); ?></h2>
+                        <div class="dim-items-grid">
+                            <?php foreach ( $perks as $item ) : ?>
+                                <a class="dim-list-item dim-list-item-perk" href="<?php echo esc_url( $item['url'] ); ?>" target="_blank" rel="noopener noreferrer" data-type="perk" data-index="<?php echo esc_attr( $item['num'] ); ?>" data-map-uid="<?php echo esc_attr( $uid ); ?>">
+                                    <span class="dim-item-num"><?php echo esc_html( $item['num'] ); ?>.</span>
+                                    <span class="dim-item-title"><?php echo esc_html( $item['title'] ); ?></span>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php elseif ( $show_empty ) : ?>
+                        <h2 class="dim-section-heading <?php echo $has_gps ? 'dim-perks-heading' : ''; ?>"><?php esc_html_e( 'Perk Stops', 'district-interactive-map' ); ?></h2>
+                        <p class="dim-empty-section"><?php esc_html_e( 'No locations added yet.', 'district-interactive-map' ); ?></p>
+                    <?php endif; ?>
+
+                <?php endif; ?>
             </div>
 
             <div class="dim-map-col">
-                <div class="dim-legend-bar">
-                    <div class="dim-legend-item">
-                        <span class="dim-legend-badge dim-legend-badge-gps">01</span>
-                        <span class="dim-legend-label"><?php esc_html_e( 'GPS Links', 'district-interactive-map' ); ?></span>
+                <?php if ( $has_gps || $has_perks ) : ?>
+                    <div class="dim-legend-bar">
+                        <?php if ( $has_gps ) : ?>
+                            <div class="dim-legend-item">
+                                <span class="dim-legend-badge dim-legend-badge-gps">01</span>
+                                <span class="dim-legend-label"><?php esc_html_e( 'GPS Links', 'district-interactive-map' ); ?></span>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ( $has_perks ) : ?>
+                            <div class="dim-legend-item">
+                                <span class="dim-legend-badge dim-legend-badge-perk">01</span>
+                                <span class="dim-legend-label"><?php esc_html_e( 'Perk Stops', 'district-interactive-map' ); ?></span>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                    <div class="dim-legend-item">
-                        <span class="dim-legend-badge dim-legend-badge-perk">01</span>
-                        <span class="dim-legend-label"><?php esc_html_e( 'Perk Stops', 'district-interactive-map' ); ?></span>
-                    </div>
-                </div>
+                <?php endif; ?>
                 <div class="dim-map-canvas" id="<?php echo esc_attr( $uid ); ?>-canvas"></div>
             </div>
         </div>
