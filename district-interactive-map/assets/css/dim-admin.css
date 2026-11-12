@@ -1,0 +1,86 @@
+.dim-form-table input.regular-text {
+    max-width: 100%;
+}
+
+.dim-coord {
+    width: 120px;
+}
+
+.dim-repeater-wrapper {
+    margin-top: 12px;
+}
+
+.dim-repeater-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+}
+
+.dim-repeater-table th,
+.dim-repeater-table td {
+    padding: 8px 6px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.dim-repeater-table th {
+    font-weight: 600;
+    background: #fafafa;
+}
+
+.dim-repeater-table td input {
+    width: 100%;
+}
+
+.dim-repeater-table .dim-col-handle {
+    width: 70px;
+    white-space: nowrap;
+}
+
+.dim-repeater-table .dim-col-actions {
+    width: 170px;
+    white-space: nowrap;
+}
+
+.dim-repeater-table .dim-col-actions .button {
+    margin-right: 2px;
+    margin-bottom: 2px;
+}
+
+.dim-repeater-row {
+    cursor: move;
+    background: #fff;
+    transition: background-color 0.15s ease;
+}
+
+.dim-repeater-row:hover {
+    background: #f9f9f9;
+}
+
+.dim-repeater-row.dim-dragging {
+    opacity: 0.6;
+    background: #eef;
+}
+
+.dim-row-number {
+    display: inline-block;
+    min-width: 28px;
+    font-weight: 700;
+    color: #555;
+}
+
+.dim-drag-handle {
+    color: #aaa;
+    cursor: grab;
+    margin-left: 6px;
+    user-select: none;
+}
+
+.dim-drag-handle:active {
+    cursor: grabbing;
+}
+
+.dim-add-row {
+    margin-top: 6px;
+}

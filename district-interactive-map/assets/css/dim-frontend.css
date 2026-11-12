@@ -1,0 +1,261 @@
+.dim-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    background-color: #F4F4F4;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.dim-container *,
+.dim-container *::before,
+.dim-container *::after {
+    -webkit-box-sizing: inherit;
+            box-sizing: inherit;
+}
+
+.dim-lists-col {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 1 50%;
+            flex: 1 1 50%;
+    max-width: 50%;
+    padding: 50px 60px;
+}
+
+.dim-map-col {
+    -webkit-box-flex: 1;
+        -ms-flex: 1 1 50%;
+            flex: 1 1 50%;
+    max-width: 50%;
+    background-color: #ffffff;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+}
+
+.dim-section-heading {
+    font-size: 42px;
+    font-weight: 800;
+    color: #000000;
+    letter-spacing: -0.5px;
+    margin: 0 0 28px 0;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.dim-perks-heading {
+    margin-top: 50px;
+}
+
+.dim-items-grid {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 40px 1fr;
+        grid-template-columns: repeat(2, 1fr);
+    -webkit-column-gap: 40px;
+       -moz-column-gap: 40px;
+            column-gap: 40px;
+    row-gap: 14px;
+}
+
+.dim-list-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    gap: 6px;
+    font-size: 16px;
+    color: #333333;
+    text-decoration: none;
+    -webkit-transition: color 0.2s ease, font-weight 0.2s ease;
+    -o-transition: color 0.2s ease, font-weight 0.2s ease;
+    transition: color 0.2s ease, font-weight 0.2s ease;
+    line-height: 1.4;
+}
+
+.dim-list-item-gps:hover,
+.dim-list-item-gps.is-active {
+    color: #FF3B1D;
+}
+
+.dim-list-item-perk:hover,
+.dim-list-item-perk.is-active {
+    color: #000000;
+    font-weight: bold;
+}
+
+.dim-item-num {
+    -ms-flex-negative: 0;
+        flex-shrink: 0;
+    font-weight: 700;
+    color: inherit;
+}
+
+.dim-item-title {
+    color: inherit;
+}
+
+.dim-legend-bar {
+    height: 64px;
+    padding: 0 28px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    gap: 28px;
+    border-bottom: 1px solid #E5E5E5;
+    background-color: #ffffff;
+}
+
+.dim-legend-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    gap: 10px;
+}
+
+.dim-legend-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.dim-legend-badge-gps {
+    background-color: #FF3B1D;
+}
+
+.dim-legend-badge-perk {
+    background-color: #111111;
+}
+
+.dim-legend-label {
+    font-size: 13px;
+    color: #555555;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.dim-map-canvas {
+    width: 100%;
+    -webkit-box-flex: 1;
+        -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+    min-height: 620px;
+    height: 620px;
+}
+
+.dim-marker {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    cursor: pointer;
+    -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    -webkit-transition: -webkit-transform 0.2s ease, background-color 0.2s ease, -webkit-box-shadow 0.2s ease;
+    transition: -webkit-transform 0.2s ease, background-color 0.2s ease, -webkit-box-shadow 0.2s ease;
+    -o-transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
+    -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.dim-marker-gps {
+    background-color: #FF3B1D;
+    z-index: 100;
+}
+
+.dim-marker-perk {
+    background-color: #111111;
+    z-index: 200;
+}
+
+.dim-marker.is-active {
+    -webkit-transform: translate(-50%, -50%) scale(1.22);
+        -ms-transform: translate(-50%, -50%) scale(1.22);
+            transform: translate(-50%, -50%) scale(1.22);
+    z-index: 9999 !important;
+    -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dim-error {
+    color: #FF3B1D;
+    font-weight: bold;
+}
+
+@media (max-width: 991px) {
+    .dim-lists-col,
+    .dim-map-col {
+        -webkit-box-flex: 1;
+            -ms-flex: 1 1 100%;
+                flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    .dim-lists-col {
+        padding: 24px;
+    }
+
+    .dim-map-canvas {
+        min-height: 450px;
+        height: 450px;
+    }
+}
+
+@media (max-width: 576px) {
+    .dim-items-grid {
+        -ms-grid-columns: 1fr;
+            grid-template-columns: 1fr;
+    }
+
+    .dim-section-heading {
+        font-size: 32px;
+    }
+}
