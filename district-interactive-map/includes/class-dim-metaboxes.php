@@ -119,18 +119,78 @@ class DIM_Metaboxes {
     }
 
     public function render_gps_meta( $post ) {
+        $gps_heading = get_post_meta( $post->ID, '_dim_gps_heading', true );
+        if ( '' === $gps_heading ) {
+            $gps_heading = '<strong>GPS</strong> LINKS';
+        }
+
         $items = get_post_meta( $post->ID, '_dim_gps_links', true );
         if ( ! is_array( $items ) ) {
             $items = array();
         }
+        ?>
+        <p>
+            <label for="dim_gps_heading">
+                <?php esc_html_e( 'Section Heading (Use Bold for heavy text, normal for light text)', 'district-interactive-map' ); ?>
+            </label>
+        </p>
+        <?php
+        wp_editor(
+            $gps_heading,
+            'dim_gps_heading',
+            array(
+                'textarea_name' => 'dim_gps_heading',
+                'textarea_rows' => 2,
+                'media_buttons' => false,
+                'wpautop'       => false,
+                'teeny'         => true,
+                'tinymce'       => array(
+                    'toolbar1'          => 'bold,removeformat',
+                    'toolbar2'          => '',
+                    'forced_root_block' => false,
+                ),
+                'quicktags'     => array( 'buttons' => 'strong' ),
+            )
+        );
+
         $this->render_repeater( 'gps', __( 'GPS Links', 'district-interactive-map' ), $items );
     }
 
     public function render_perk_meta( $post ) {
+        $perk_heading = get_post_meta( $post->ID, '_dim_perk_heading', true );
+        if ( '' === $perk_heading ) {
+            $perk_heading = '<strong>PERK</strong> STOPS';
+        }
+
         $items = get_post_meta( $post->ID, '_dim_perk_stops', true );
         if ( ! is_array( $items ) ) {
             $items = array();
         }
+        ?>
+        <p>
+            <label for="dim_perk_heading">
+                <?php esc_html_e( 'Section Heading (Use Bold for heavy text, normal for light text)', 'district-interactive-map' ); ?>
+            </label>
+        </p>
+        <?php
+        wp_editor(
+            $perk_heading,
+            'dim_perk_heading',
+            array(
+                'textarea_name' => 'dim_perk_heading',
+                'textarea_rows' => 2,
+                'media_buttons' => false,
+                'wpautop'       => false,
+                'teeny'         => true,
+                'tinymce'       => array(
+                    'toolbar1'          => 'bold,removeformat',
+                    'toolbar2'          => '',
+                    'forced_root_block' => false,
+                ),
+                'quicktags'     => array( 'buttons' => 'strong' ),
+            )
+        );
+
         $this->render_repeater( 'perk', __( 'Perk Stops', 'district-interactive-map' ), $items );
     }
 
@@ -216,6 +276,26 @@ class DIM_Metaboxes {
 
         if ( 'district_map' !== get_post_type( $post_id ) ) {
             return;
+        }
+
+        $allowed_heading_html = array(
+            'strong' => array(),
+            'b'      => array(),
+            'span'   => array( 'class' => array() ),
+        );
+
+        if ( isset( $_POST['dim_gps_heading'] ) ) {
+            $gps_heading = wp_unslash( $_POST['dim_gps_heading'] );
+            $gps_heading = wp_kses( $gps_heading, $allowed_heading_html );
+            $gps_heading = str_replace( array( '<p>', '</p>' ), '', $gps_heading );
+            update_post_meta( $post_id, '_dim_gps_heading', $gps_heading );
+        }
+
+        if ( isset( $_POST['dim_perk_heading'] ) ) {
+            $perk_heading = wp_unslash( $_POST['dim_perk_heading'] );
+            $perk_heading = wp_kses( $perk_heading, $allowed_heading_html );
+            $perk_heading = str_replace( array( '<p>', '</p>' ), '', $perk_heading );
+            update_post_meta( $post_id, '_dim_perk_heading', $perk_heading );
         }
 
         $center_lat = isset( $_POST['dim_center_lat'] ) ? sanitize_text_field( wp_unslash( $_POST['dim_center_lat'] ) ) : '';

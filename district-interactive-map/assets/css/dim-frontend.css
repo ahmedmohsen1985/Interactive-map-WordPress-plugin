@@ -52,15 +52,18 @@
 .dim-section-heading {
     font-family: 'Clash Display', sans-serif !important;
     font-size: 44px !important;
+    font-weight: 300 !important;
     line-height: 1.05 !important;
     letter-spacing: 0.5px !important;
     text-transform: uppercase !important;
-    color: #000000 !important;
+    color: #1A1A1A !important;
     margin: 0 0 28px 0 !important;
     padding: 0 !important;
     text-align: left !important;
 }
 
+.dim-container h2.dim-section-heading strong,
+.dim-container h2.dim-section-heading b,
 .dim-container h2.dim-section-heading .dim-heading-bold,
 .dim-heading-bold {
     font-family: 'Clash Display', sans-serif !important;
